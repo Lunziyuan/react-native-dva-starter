@@ -1,17 +1,17 @@
-import React, { Component } from 'react'
-import { StyleSheet, View } from 'react-native'
-import { connect } from 'react-redux'
+import React, { Component } from 'react';
+import { StyleSheet, View } from 'react-native';
+import { connect } from 'react-redux';
 
-import { Button } from '../components'
-import { NavigationActions } from '../utils'
+import { Button } from '../components';
+import { NavigationActions } from '../utils';
 
 class Detail extends Component {
   static navigationOptions = {
-    title: 'Detail',
+    title: 'Detail'
   }
 
   goBack = () => {
-    this.props.dispatch(NavigationActions.back({ routeName: 'Account' }))
+    this.props.dispatch(NavigationActions.back({ routeName: 'Account' }));
   }
 
   render() {
@@ -19,7 +19,7 @@ class Detail extends Component {
       <View style={styles.container}>
         <Button text="Go Back" onPress={this.goBack} />
       </View>
-    )
+    );
   }
 }
 
@@ -27,8 +27,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
-  },
-})
+    justifyContent: 'center'
+  }
+});
 
-export default connect(null)(Detail)
+export default connect(null)(Detail);

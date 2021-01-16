@@ -1,131 +1,131 @@
-import React, { PureComponent } from 'react'
-import { BackHandler, Animated, Easing } from 'react-native'
+import React, { PureComponent } from 'react';
+import { BackHandler, Animated, Easing } from 'react-native';
 import {
   createStackNavigator,
   createBottomTabNavigator,
-  NavigationActions,
-} from 'react-navigation'
+  NavigationActions
+} from 'react-navigation';
 import {
   createReduxContainer,
   createReactNavigationReduxMiddleware,
-  createNavigationReducer,
-} from 'react-navigation-redux-helpers'
-import { connect } from 'react-redux'
+  createNavigationReducer
+} from 'react-navigation-redux-helpers';
+import { connect } from 'react-redux';
 
-import Loading from './containers/Loading'
-import Login from './containers/Login'
-import Home from './containers/Home'
-import Account from './containers/Account'
-import Detail from './containers/Detail'
+import Loading from './containers/Loading';
+import Login from './containers/Login';
+import Home from './containers/Home';
+import Account from './containers/Account';
+import Detail from './containers/Detail';
 
 const HomeNavigator = createBottomTabNavigator({
   Home: { screen: Home },
-  Account: { screen: Account },
-})
+  Account: { screen: Account }
+});
 
 HomeNavigator.navigationOptions = ({ navigation }) => {
-  const { routeName } = navigation.state.routes[navigation.state.index]
+  const { routeName } = navigation.state.routes[navigation.state.index];
 
   return {
-    headerTitle: routeName,
-  }
-}
+    headerTitle: routeName
+  };
+};
 
 const MainNavigator = createStackNavigator(
   {
     HomeNavigator: { screen: HomeNavigator },
-    Detail: { screen: Detail },
+    Detail: { screen: Detail }
   },
   {
-    headerMode: 'float',
+    headerMode: 'float'
   }
-)
+);
 
 const AppNavigator = createStackNavigator(
   {
     Main: { screen: MainNavigator },
-    Login: { screen: Login },
+    Login: { screen: Login }
   },
   {
     headerMode: 'none',
     mode: 'modal',
     navigationOptions: {
-      gesturesEnabled: false,
+      gesturesEnabled: false
     },
     transitionConfig: () => ({
       transitionSpec: {
         duration: 300,
         easing: Easing.out(Easing.poly(4)),
-        timing: Animated.timing,
+        timing: Animated.timing
       },
       screenInterpolator: sceneProps => {
-        const { layout, position, scene } = sceneProps
-        const { index } = scene
+        const { layout, position, scene } = sceneProps;
+        const { index } = scene;
 
-        const height = layout.initHeight
+        const height = layout.initHeight;
         const translateY = position.interpolate({
           inputRange: [index - 1, index, index + 1],
-          outputRange: [height, 0, 0],
-        })
+          outputRange: [height, 0, 0]
+        });
 
         const opacity = position.interpolate({
           inputRange: [index - 1, index - 0.99, index],
-          outputRange: [0, 1, 1],
-        })
+          outputRange: [0, 1, 1]
+        });
 
-        return { opacity, transform: [{ translateY }] }
-      },
-    }),
+        return { opacity, transform: [{ translateY }] };
+      }
+    })
   }
-)
+);
 
-export const routerReducer = createNavigationReducer(AppNavigator)
+export const routerReducer = createNavigationReducer(AppNavigator);
 
 export const routerMiddleware = createReactNavigationReduxMiddleware(
   state => state.router
-)
+);
 
-const App = createReduxContainer(AppNavigator, 'root')
+const App = createReduxContainer(AppNavigator, 'root');
 
 function getActiveRouteName(navigationState) {
   if (!navigationState) {
-    return null
+    return null;
   }
-  const route = navigationState.routes[navigationState.index]
+  const route = navigationState.routes[navigationState.index];
   if (route.routes) {
-    return getActiveRouteName(route)
+    return getActiveRouteName(route);
   }
-  return route.routeName
+  return route.routeName;
 }
 
 class Router extends PureComponent {
   UNSAFE_componentWillMount() {
-    BackHandler.addEventListener('hardwareBackPress', this.backHandle)
+    BackHandler.addEventListener('hardwareBackPress', this.backHandle);
   }
 
   UNSAFE_componentWillUnmount() {
-    BackHandler.removeEventListener('hardwareBackPress', this.backHandle)
+    BackHandler.removeEventListener('hardwareBackPress', this.backHandle);
   }
 
   backHandle = () => {
-    const currentScreen = getActiveRouteName(this.props.router)
+    const currentScreen = getActiveRouteName(this.props.router);
     if (currentScreen === 'Login') {
-      return true
+      return true;
     }
     if (currentScreen !== 'Home') {
-      this.props.dispatch(NavigationActions.back())
-      return true
+      this.props.dispatch(NavigationActions.back());
+      return true;
     }
-    return false
+    return false;
   }
 
   render() {
-    const { app, dispatch, router } = this.props
-    if (app.loading) return <Loading />
+    const { app, dispatch, router } = this.props;
+    if (app.loading) {return <Loading />;}
 
-    return <App dispatch={dispatch} state={router} />
+    return <App dispatch={dispatch} state={router} />;
   }
 }
 
-export default connect(({ app, router }) => ({ app, router }))(Router)
+export default connect(({ app, router }) => ({ app, router }))(Router);
 

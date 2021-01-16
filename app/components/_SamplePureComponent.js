@@ -1,8 +1,8 @@
-import React from 'react'
+import React from 'react';
 // import propTypes from 'prop-types'
-import { StyleSheet, Text } from 'react-native'
+import { StyleSheet, Text } from 'react-native';
 
-import Touchable from './Touchable'
+import Touchable from './Touchable';
 
 export default class Component extends React.PureComponent {
   // static propTypes = {
@@ -20,12 +20,12 @@ export default class Component extends React.PureComponent {
   // }
 
   render() {
-    const { text, children, style, textStyle, ...rest } = this.props
+    const { text, children, style, textStyle, ...rest } = this.props;
     return (
       <Touchable style={[styles.button, style]} {...rest}>
         <Text style={[styles.text, textStyle]}>{text || children}</Text>
       </Touchable>
-    )
+    );
   }
 }
 
@@ -38,10 +38,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderColor: '#037aff',
-    borderWidth: StyleSheet.hairlineWidth,
+    borderWidth: StyleSheet.hairlineWidth
   },
   text: {
     fontSize: 16,
-    color: '#037aff',
-  },
-})
+    color: '#037aff'
+  }
+});
